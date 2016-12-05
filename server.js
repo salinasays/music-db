@@ -6,8 +6,10 @@ const Sequelize = require('sequelize');
 const sequelizeConnection = require('./db');
 
 //body-parser middleware adds .body property to req (if we make a POST AJAX request with some data attached, that data will be accessible as req.body)
+app.use(express.static(path.join(__dirname, '/front/bundle')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
 
 //listen on port 8888
 app.listen('8888', () => console.log('Listening on port 8888'));
@@ -18,3 +20,6 @@ app.listen('8888', () => console.log('Listening on port 8888'));
 //////////
 
 app.use('/api', require('./routers'))
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/front/index.html'));
+});
