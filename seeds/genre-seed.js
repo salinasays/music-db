@@ -16,3 +16,4 @@ Genre.sync({force: true})
 .then(() => Genre.create({title: ['genre1', 'genre2']}))
 // if everything is correct, you should only have THREE genres in your database
 .catch((err) => console.log(err));
+ 
