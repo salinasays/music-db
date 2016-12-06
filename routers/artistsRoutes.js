@@ -1,7 +1,7 @@
 const artistsRouter = require('express').Router();
 const Artist = require('../models/artist-model');
 // const Song = require('../models/song-model');
-
+ 
 const getArtistsAz = (req, res) => {
 	Artist.findAll({order: ['name']})
 	.then((data) => {

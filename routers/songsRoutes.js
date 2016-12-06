@@ -4,7 +4,7 @@ const Artist = require('../models/artist-model');
 const Genre = require('../models/genre-model');
 
 const getAllSongs = (req, res) => {
-	Song.findAll({
+	Song.findAll({ 
 		include: [Artist, Genre]
 	})
 	.then((data) => {

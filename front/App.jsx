@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route, IndexRoute, Link, hashHistory} from 'react-router';
+import './App.css';
 import Home from './home.jsx';
 import Artists from './artists.jsx';
 import Songs from './songs.jsx';
@@ -15,10 +16,10 @@ var App = React.createClass({
 				<nav className="navbar navbar-inverse">
 					<div className="container-fluid">
 						<div className="nav navbar-nav">
-							<Link to='/'>Home</Link>
-							<Link to='Artists'>Artists</Link>
-							<Link to='Songs'>Songs</Link>
-							<Link to='Playlists'>Playlists</Link>
+							<Link to='/'>Home</Link> 
+							<Link to='Artists'>Artists</Link> 
+							<Link to='Songs'>Songs</Link> 
+							<Link to='Playlists'>Playlists</Link> 
 							<Link to='Create'>Create Playlist</Link>
 						</div>
 					</div>
