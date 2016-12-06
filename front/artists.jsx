@@ -3,7 +3,7 @@ import $ from 'jquery';
 
 var Artists = React.createClass({
 	getInitialState: function(){
-		return{artists: []}
+		return {artists: []}
 	},
 	componentDidMount: function(){
 		$.ajax({

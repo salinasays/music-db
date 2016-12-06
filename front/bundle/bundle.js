@@ -26936,14 +26936,54 @@
 	var Songs = _react2.default.createClass({
 		displayName: 'Songs',
 	
+		getInitialState: function getInitialState() {
+			return { songs: [] };
+		},
+		componentDidMount: function componentDidMount() {
+			var _this = this;
+	
+			_jquery2.default.ajax({
+				url: '/api/songs',
+				type: 'GET'
+			}).done(function (data) {
+				_this.setState({ songs: data });
+				console.log(data);
+			});
+		},
 		render: function render() {
+	
+			// console.log(this.state.songs[0].artistId)
 			return _react2.default.createElement(
 				'div',
 				null,
 				_react2.default.createElement(
 					'h2',
 					null,
-					'Hello from the Songs page'
+					'Songs:'
+				),
+				_react2.default.createElement(
+					'ol',
+					null,
+					this.state.songs.length === 0 ? null : this.state.songs.map(function (val, idx) {
+	
+						var songTitle = val.title;
+						var artist = val.artist ? val.artist.name : 'N/A';
+	
+						return _react2.default.createElement(
+							'li',
+							{ key: idx },
+							songTitle,
+							_react2.default.createElement(
+								'ul',
+								null,
+								_react2.default.createElement(
+									'li',
+									{ key: idx },
+									'Artist: ' + artist
+								)
+							)
+						);
+					})
 				)
 			);
 		}
