@@ -14,11 +14,8 @@ const PlaylistTracks = React.createClass({
 			type: 'GET'
 		})
 		.done((data) => {
-			// this.setState({playlists: data})
-
 			var songsArr = data.songs
 
-			//let genres = 
 			songsArr.forEach((song, idx) => {
 				song.genres.forEach((genre) => {
 					if(allGenres.indexOf(genre.title) === -1) {
@@ -26,12 +23,6 @@ const PlaylistTracks = React.createClass({
 					}
 				})
 			})
-
-			// genres.forEach((val, idx) => {
-			// 	console.log(val)
-			// 	val.forEach( (genreObj, idx) => allGenres.push(genreObj.title) )
-			// })
-
 		}).then((data) => {
 			this.setState({playlists: data, allGenres: allGenres})
 		})

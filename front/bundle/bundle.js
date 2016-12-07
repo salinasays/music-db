@@ -37306,11 +37306,28 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _jquery = __webpack_require__(240);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var Create = _react2.default.createClass({
 		displayName: 'Create',
 	
+		getInitialState: function getInitialState() {
+			return { playlists: null };
+		},
+		componentDidMount: function componentDidMount() {
+			var _this = this;
+	
+			_jquery2.default.ajax({
+				url: '/api/playlists',
+				type: 'POST'
+			}).done(function (data) {
+				_this.setState({ playlists: data });
+			});
+		},
 		render: function render() {
 			return _react2.default.createElement(
 				'div',
@@ -37318,7 +37335,24 @@
 				_react2.default.createElement(
 					'h2',
 					null,
-					'Create a playlist here.'
+					'Create Your Own Playlist: '
+				),
+				_react2.default.createElement(
+					'form',
+					null,
+					_react2.default.createElement(
+						'label',
+						null,
+						'Playlist Title:'
+					),
+					' ',
+					_react2.default.createElement('br', null),
+					_react2.default.createElement('input', { type: 'text' }),
+					_react2.default.createElement(
+						'button',
+						{ type: 'submit' },
+						'Create'
+					)
 				)
 			);
 		}
@@ -37365,11 +37399,8 @@
 				url: '/api/playlists/' + this.props.params.id,
 				type: 'GET'
 			}).done(function (data) {
-				// this.setState({playlists: data})
-	
 				var songsArr = data.songs;
 	
-				//let genres = 
 				songsArr.forEach(function (song, idx) {
 					song.genres.forEach(function (genre) {
 						if (allGenres.indexOf(genre.title) === -1) {
@@ -37377,11 +37408,6 @@
 						}
 					});
 				});
-	
-				// genres.forEach((val, idx) => {
-				// 	console.log(val)
-				// 	val.forEach( (genreObj, idx) => allGenres.push(genreObj.title) )
-				// })
 			}).then(function (data) {
 				_this.setState({ playlists: data, allGenres: allGenres });
 			});
