@@ -4,21 +4,44 @@ import Songs from './songs.jsx';
 
 const PlaylistTracks = React.createClass({
 	getInitialState: function(){
-		return {playlists: null}
+		return {playlists: null, allGenres: []}
 	},
 	componentDidMount: function(){
+		var allGenres = [];
+
 		$.ajax({
 			url: '/api/playlists/' + this.props.params.id,
 			type: 'GET'
 		})
 		.done((data) => {
-			this.setState({playlists: data})
+			// this.setState({playlists: data})
+
+			var songsArr = data.songs
+
+			//let genres = 
+			songsArr.forEach((song, idx) => {
+				song.genres.forEach((genre) => {
+					if(allGenres.indexOf(genre.title) === -1) {
+						allGenres.push(genre.title)
+					}
+				})
+			})
+
+			// genres.forEach((val, idx) => {
+			// 	console.log(val)
+			// 	val.forEach( (genreObj, idx) => allGenres.push(genreObj.title) )
+			// })
+
+		}).then((data) => {
+			this.setState({playlists: data, allGenres: allGenres})
 		})
 	},
 	render: function(){
 		return (
 			<div>
 				<h1>{(this.state.playlists) ? this.state.playlists.title : null}</h1>
+
+				<h3>Genre(s): {(this.state.allGenres).join(', ')}</h3>
 
 				<ol>
 					{(this.state.playlists) ? this.state.playlists.songs.map((val, idx) => {
@@ -28,8 +51,8 @@ const PlaylistTracks = React.createClass({
 						return (
 							<li key={idx}>
 							{val.title} by {val.artist.name}
+
 								<ul>
-									<li>Genre(s): {val.songs.genres.title}</li>
 									<li>Created at: {val.createdAt}</li>
 
 									<iframe id="ytplayer" type="text/html" width="640" height="360"
