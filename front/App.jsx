@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, Route, IndexRoute, Link, hashHistory} from 'react-router';
+import {Router, Route, IndexRoute, Link, browserHistory} from 'react-router';
 import './App.css';
 import Home from './home.jsx';
 import Artists from './artists.jsx';
 import Songs from './songs.jsx';
 import Playlists from './playlists.jsx';
 import Create from './create.jsx';
+import PlaylistTracks from './playlistTracks.jsx';
 
 var App = React.createClass({
 	render: function(){
@@ -31,12 +32,13 @@ var App = React.createClass({
 })
 
 ReactDOM.render(
-	<Router history={hashHistory}>
+	<Router history={browserHistory}>
 		<Route path='/' component={App}>
 			<IndexRoute component={Home} />
 			<Route path='Artists' component={Artists} />
 			<Route path='Songs' component={Songs} />
 			<Route path='Playlists' component={Playlists} />
+			<Route path='Playlists/:id' component={PlaylistTracks} />
 			<Route path='Create' component={Create} />
 		</Route>
 	</Router>,

@@ -85,6 +85,10 @@
 	
 	var _create2 = _interopRequireDefault(_create);
 	
+	var _playlistTracks = __webpack_require__(244);
+	
+	var _playlistTracks2 = _interopRequireDefault(_playlistTracks);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var App = _react2.default.createClass({
@@ -143,7 +147,7 @@
 	
 	_reactDom2.default.render(_react2.default.createElement(
 		_reactRouter.Router,
-		{ history: _reactRouter.hashHistory },
+		{ history: _reactRouter.browserHistory },
 		_react2.default.createElement(
 			_reactRouter.Route,
 			{ path: '/', component: App },
@@ -151,6 +155,7 @@
 			_react2.default.createElement(_reactRouter.Route, { path: 'Artists', component: _artists2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'Songs', component: _songs2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'Playlists', component: _playlists2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'Playlists/:id', component: _playlistTracks2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'Create', component: _create2.default })
 		)
 	), document.getElementById('app'));
@@ -26951,8 +26956,6 @@
 			});
 		},
 		render: function render() {
-	
-			// console.log(this.state.songs[0].artistId)
 			return _react2.default.createElement(
 				'div',
 				null,
@@ -26968,6 +26971,7 @@
 	
 						var songTitle = val.title;
 						var artist = val.artist ? val.artist.name : 'N/A';
+						var youtube_url = val.youtube_url ? val.youtube_url : "Unavailable";
 	
 						return _react2.default.createElement(
 							'li',
@@ -26980,7 +26984,9 @@
 									'li',
 									{ key: idx },
 									'Artist: ' + artist
-								)
+								),
+								_react2.default.createElement('iframe', { id: 'ytplayer', type: 'text/html', width: '640', height: '360',
+									src: youtube_url.replace('watch?v=', 'embed/') + '?origin=http://localhost:8888.com' })
 							)
 						);
 					})
@@ -27005,11 +27011,31 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _jquery = __webpack_require__(243);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var _reactRouter = __webpack_require__(179);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var Playlists = _react2.default.createClass({
 		displayName: 'Playlists',
 	
+		getInitialState: function getInitialState() {
+			return { playlists: [] };
+		},
+		componentDidMount: function componentDidMount() {
+			var _this = this;
+	
+			_jquery2.default.ajax({
+				url: '/api/playlists',
+				type: 'GET'
+			}).done(function (data) {
+				console.log(data);
+				_this.setState({ playlists: data });
+			});
+		},
 		render: function render() {
 			return _react2.default.createElement(
 				'div',
@@ -27017,7 +27043,22 @@
 				_react2.default.createElement(
 					'h2',
 					null,
-					'Hello from the Playlists Page'
+					'Playlists:'
+				),
+				_react2.default.createElement(
+					'ol',
+					null,
+					this.state.playlists.length === 0 ? "There are no playlists. Go create one!" : this.state.playlists.map(function (val) {
+						return _react2.default.createElement(
+							'li',
+							{ key: val.id },
+							_react2.default.createElement(
+								_reactRouter.Link,
+								{ to: '/playlists/' + val.id },
+								val.title
+							)
+						);
+					})
 				)
 			);
 		}
@@ -37284,6 +37325,97 @@
 	return jQuery;
 	} );
 
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _jquery = __webpack_require__(243);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	var _songs = __webpack_require__(240);
+	
+	var _songs2 = _interopRequireDefault(_songs);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var PlaylistTracks = _react2.default.createClass({
+		displayName: 'PlaylistTracks',
+	
+		getInitialState: function getInitialState() {
+			return { playlists: null };
+		},
+		componentDidMount: function componentDidMount() {
+			var _this = this;
+	
+			_jquery2.default.ajax({
+				url: '/api/playlists/' + this.props.params.id,
+				type: 'GET'
+			}).done(function (data) {
+				_this.setState({ playlists: data });
+			});
+		},
+		render: function render() {
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'h1',
+					null,
+					this.state.playlists ? this.state.playlists.title : null
+				),
+				_react2.default.createElement(
+					'ol',
+					null,
+					this.state.playlists ? this.state.playlists.songs.map(function (val, idx) {
+	
+						var youtube_url = val.youtube_url ? val.youtube_url : "Unavailable";
+	
+						return _react2.default.createElement(
+							'li',
+							{ key: idx },
+							val.title,
+							' by ',
+							val.artist.name,
+							_react2.default.createElement(
+								'ul',
+								null,
+								_react2.default.createElement(
+									'li',
+									null,
+									'Genre(s): ',
+									val.songs.genres.title
+								),
+								_react2.default.createElement(
+									'li',
+									null,
+									'Created at: ',
+									val.createdAt
+								),
+								_react2.default.createElement('iframe', { id: 'ytplayer', type: 'text/html', width: '640', height: '360',
+									src: youtube_url.replace('watch?v=', 'embed/') + '?origin=http://localhost:8888.com' })
+							)
+						);
+					}) : null
+				)
+			);
+		}
+	});
+	
+	exports.default = PlaylistTracks;
+	
+	// {this.state.playlists.data.title}
 
 /***/ }
 /******/ ]);

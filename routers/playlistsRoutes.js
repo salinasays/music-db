@@ -17,7 +17,12 @@ const getAllPlaylists = (req, res) => {
 }
 
 const getPlaylistsById = (req, res) => {
-	Playlist.findById(req.params.id)
+	Playlist.findById(req.params.id, 
+		{include: [{
+			model: Song, 
+			include: [Artist, Genre]
+		}]
+	})
 	.then((data) => {
 		res.send(data)
 	})
